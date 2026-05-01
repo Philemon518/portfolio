@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "npm run verify:models && tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "verify:models": "node scripts/verify-model-assets.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.21",
