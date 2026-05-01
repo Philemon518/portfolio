@@ -6,6 +6,18 @@ const HAND_POINTER_HOVER_CLASS = 'hand-pointer-hover'
 
 let lastHandHoverHost: Element | null = null
 
+function pulseInteractiveTarget(el: Element | null) {
+  const target = el?.closest('button, a, [role="button"], [role="radio"], .clickable-hover')
+  if (!(target instanceof HTMLElement) || target.matches(':disabled, [aria-disabled="true"]')) {
+    return
+  }
+  target.classList.remove('portfolio-click-pop')
+  // Force a reflow so repeated hand clicks restart the animation.
+  void target.offsetWidth
+  target.classList.add('portfolio-click-pop')
+  window.setTimeout(() => target.classList.remove('portfolio-click-pop'), 260)
+}
+
 export function clearHandPointerHover() {
   lastHandHoverHost?.classList.remove(HAND_POINTER_HOVER_CLASS)
   lastHandHoverHost = null
@@ -60,6 +72,7 @@ export function useSyntheticHandPointer() {
     }
     dispatchMove(el, x, y)
     if (type === 'primary') {
+      pulseInteractiveTarget(el)
       el.dispatchEvent(
         new PointerEvent('pointerdown', {
           bubbles: true,

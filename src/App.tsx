@@ -96,6 +96,10 @@ function App() {
   }, []);
 
   const handleHudBack = useCallback(() => {
+    if (document.querySelector('[data-laptop-demo-overlay="true"]')) {
+      window.dispatchEvent(new CustomEvent('portfolio:laptop-demo-back'));
+      return;
+    }
     if (activeId === 'projects' && projectsModelFocus) {
       setProjectsModelFocus(null);
       setHoveredId(null);
@@ -234,8 +238,7 @@ function App() {
               Welcome to Phil&apos;s Garage!
             </h1>
             <p className="welcome-gate__body">
-              This is Philemon&apos;s portfolio shown in a more fun, personal, and Iron Man inspired
-              way. Hope you enjoy!
+              This is Philemon&apos;s portfolio shown in a more fun and personal way. Hope you enjoy!
             </p>
             <div className="welcome-gate__actions">
               <button

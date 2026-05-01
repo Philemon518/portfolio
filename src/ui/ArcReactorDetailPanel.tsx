@@ -5,7 +5,7 @@ const ARC_REACTOR_VIDEO_EMBED =
   'https://www.youtube-nocookie.com/embed/FDVrM929s70?start=314&mute=1&autoplay=1&cc_load_policy=1&playsinline=1&rel=0&modestbranding=1';
 
 /** Drop your PNGs into `public/engineering/` with these names (or change paths here). */
-const POLAROID_HHO_SRC = '/engineering/arc-hho-generator.png';
+const POLAROID_HHO_SRC = '/engineering/arc-hho-generator.jpg';
 /** RC nitro / helicopter engine (PNG in `public/engineering/`; re-encode HEIC to PNG/JPEG for web). */
 const POLAROID_ENGINE_SRC = '/engineering/helicopter-engine.png';
 

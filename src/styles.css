@@ -72,6 +72,28 @@ body.hand-mode .clickable-hover.hand-pointer-hover {
   outline-color: rgba(125, 211, 252, 0.92);
 }
 
+@keyframes portfolio-click-pop {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  45% {
+    transform: scale(0.94);
+    filter: brightness(1.18);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+button.portfolio-click-pop,
+a.portfolio-click-pop,
+[role='button'].portfolio-click-pop,
+[role='radio'].portfolio-click-pop {
+  animation: portfolio-click-pop 240ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
 button.clickable-hover:disabled {
   outline-color: transparent;
   box-shadow: none;
@@ -938,7 +960,7 @@ canvas {
   }
 }
 
-/* Arc reactor — YouTube column; polaroids fixed between video bottom & main card; What is it? top-right */
+/* Arc reactor — video sits below Back; polaroids sit directly beneath video; What is it? top-right */
 .arc-hud-anchors {
   --arc-back-gap: clamp(1rem, 2.4vw, 2rem);
   --arc-video-col-left: calc(var(--arc-back-gap) + 12.75rem);
@@ -947,26 +969,31 @@ canvas {
   --arc-bottom-pad: clamp(1rem, 2.4vw, 2rem);
   --arc-main-max-h: min(34vh, 19rem);
   --arc-youtube-h: calc(var(--arc-left-rail) * 9 / 16);
-  --arc-video-bottom-y: calc(var(--arc-back-gap) + var(--arc-youtube-h));
+  --arc-media-top-y: calc(var(--arc-back-gap) + clamp(4.9rem, 8vh, 5.8rem));
+  --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
   --arc-main-top-y: calc(100svh - var(--arc-bottom-pad) - var(--arc-main-max-h));
-  /* Vertical center between video bottom and main panel top, nudged slightly downward */
-  --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5 + 0.75rem);
+  --arc-polaroid-y: min(
+    calc(var(--arc-video-bottom-y) + clamp(5.9rem, 8vw, 7.4rem)),
+    calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
+  );
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 5;
 }
 
-/* YouTube column: vertical center of viewport; polaroid math uses true video bottom. */
+/* Media stack: Back button first, then YouTube, then polaroids. */
 .arc-hud-anchors.arc-hud-anchors--media-below-back {
-  --arc-video-bottom-y: calc(50svh + var(--arc-youtube-h) / 2);
-  --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5 + 0.75rem);
+  --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
+  --arc-polaroid-y: min(
+    calc(var(--arc-video-bottom-y) + clamp(5.9rem, 8vw, 7.4rem)),
+    calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
+  );
 }
 
 .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
-  top: 50vh;
-  top: 50svh;
-  transform: translateY(-50%);
+  top: var(--arc-media-top-y);
+  transform: none;
   left: var(--arc-back-gap);
   width: min(
     var(--arc-left-rail),
@@ -1138,14 +1165,16 @@ canvas {
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
-    --arc-video-bottom-y: calc(50svh + var(--arc-youtube-h) / 2);
-    --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5 + 0.75rem);
+    --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
+    --arc-polaroid-y: min(
+      calc(var(--arc-video-bottom-y) + clamp(5.1rem, 11vw, 6.6rem)),
+      calc(var(--arc-main-top-y) - 0.5rem)
+    );
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
-    top: 50vh;
-    top: 50svh;
-    transform: translateY(-50%);
+    top: var(--arc-media-top-y);
+    transform: none;
     left: var(--arc-back-gap);
     width: min(var(--arc-left-rail), calc(100vw - var(--arc-back-gap) * 2 - 1rem));
   }
@@ -1185,14 +1214,16 @@ canvas {
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
-    --arc-video-bottom-y: calc(50svh + var(--arc-youtube-h) / 2);
-    --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5 + 0.75rem);
+    --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
+    --arc-polaroid-y: min(
+      calc(var(--arc-video-bottom-y) + clamp(4.1rem, 18vw, 5.2rem)),
+      calc(var(--arc-main-top-y) - 0.35rem)
+    );
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
-    top: 50vh;
-    top: 50svh;
-    transform: translateY(-50%);
+    top: var(--arc-media-top-y);
+    transform: none;
     left: var(--arc-back-gap);
     width: min(calc(100vw - var(--arc-back-gap) * 2), var(--arc-left-rail));
   }

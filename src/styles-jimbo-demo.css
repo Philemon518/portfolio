@@ -148,6 +148,16 @@
   font: 600 0.95rem var(--font-body, system-ui, sans-serif);
   cursor: pointer;
   border: 1px solid transparent;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+}
+
+.jimbo-demo-btn:active:not(:disabled) {
+  transform: scale(0.94);
+  filter: brightness(1.08);
 }
 
 .jimbo-demo-btn.primary {
@@ -1364,6 +1374,19 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.roya-demo-btn:active:not(:disabled),
+.roya-lang-toggle:active:not(:disabled),
+.jim3-exercise__icon-btn:active:not(:disabled) {
+  transform: scale(0.94);
+  filter: brightness(1.08);
 }
 
 .roya-demo-btn--primary {

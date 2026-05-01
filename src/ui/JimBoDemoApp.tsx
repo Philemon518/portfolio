@@ -118,8 +118,13 @@ export function JimBoDemoApp({ onClose }: Props) {
       e.preventDefault();
       onClose();
     };
+    const onDemoBack = () => onClose();
     document.addEventListener('keydown', onKey, { capture: true });
-    return () => document.removeEventListener('keydown', onKey, { capture: true });
+    window.addEventListener('portfolio:laptop-demo-back', onDemoBack);
+    return () => {
+      document.removeEventListener('keydown', onKey, { capture: true });
+      window.removeEventListener('portfolio:laptop-demo-back', onDemoBack);
+    };
   }, [onClose]);
 
   const copyPremadeFitnessGoal = useCallback(async () => {
@@ -181,6 +186,7 @@ export function JimBoDemoApp({ onClose }: Props) {
   return (
     <div
       className="jimbo-demo-overlay"
+      data-laptop-demo-overlay="true"
       role="dialog"
       aria-modal="true"
       aria-label="JimBo_demo.exe fitness demo"
