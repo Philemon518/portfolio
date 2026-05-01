@@ -1,0 +1,2 @@
+Pause at 0.00s for 0.33s
+Pause at 17.15s for 2.14s

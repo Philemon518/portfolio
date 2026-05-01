@@ -1,0 +1,69 @@
+{
+  "exercises": [
+    {
+      "id": "pushup",
+      "name": "Push-ups",
+      "target_muscle": "chest",
+      "sets": 3,
+      "workSeconds": 30,
+      "restSeconds": 25
+    },
+    {
+      "id": "row",
+      "name": "Dumbbell rows",
+      "target_muscle": "upper back",
+      "sets": 3,
+      "workSeconds": 35,
+      "restSeconds": 30
+    },
+    {
+      "id": "squat",
+      "name": "Barbell squats",
+      "target_muscle": "upper legs",
+      "sets": 3,
+      "gifPath": "jimbo-demo/barbell-squat.gif",
+      "workSeconds": 40,
+      "restSeconds": 35
+    },
+    {
+      "id": "plank",
+      "name": "Plank hold",
+      "target_muscle": "core",
+      "sets": 3,
+      "workSeconds": 45,
+      "restSeconds": 25
+    },
+    {
+      "id": "curl",
+      "name": "Hammer curls",
+      "target_muscle": "upper arms",
+      "sets": 3,
+      "workSeconds": 32,
+      "restSeconds": 28
+    },
+    {
+      "id": "lunge",
+      "name": "Walking lunges",
+      "target_muscle": "upper legs",
+      "sets": 3,
+      "workSeconds": 40,
+      "restSeconds": 30
+    },
+    {
+      "id": "dip",
+      "name": "Bench dips",
+      "target_muscle": "upper arms",
+      "sets": 3,
+      "workSeconds": 28,
+      "restSeconds": 25
+    },
+    {
+      "id": "shoulder",
+      "name": "Lateral raises",
+      "target_muscle": "upper arms",
+      "sets": 3,
+      "workSeconds": 30,
+      "restSeconds": 28
+    }
+  ]
+}
