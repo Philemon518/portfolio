@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { useCallback, useEffect, useState } from 'react';
+import { Component, type ErrorInfo, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { ItemId, portfolioItems } from './data/portfolioItems';
 import { GarageScene } from './scene/GarageScene';
 import { isDesktopEnvironment } from './lib/desktopGate';
@@ -20,6 +20,48 @@ import { FusionLampDetailPanel } from './ui/FusionLampDetailPanel';
 import { StLawrenceDetailPanel } from './ui/StLawrenceDetailPanel';
 import { HandInstructionsModal } from './ui/HandInstructionsModal';
 
+class CanvasErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('Garage scene failed to render.', error, info);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div
+          role="alert"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'grid',
+            placeItems: 'center',
+            padding: 24,
+            textAlign: 'center',
+            color: '#e8ecf4',
+            background: '#0a0c12',
+            zIndex: 0,
+          }}
+        >
+          <div style={{ maxWidth: 520 }}>
+            <h2 style={{ margin: '0 0 12px' }}>The 3D scene could not load.</h2>
+            <p style={{ margin: 0, color: '#94a3b8', lineHeight: 1.5 }}>
+              The welcome UI is still available. Check the browser console for the scene error.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function useDesktopAllowed() {
   const [ok, setOk] = useState(() => isDesktopEnvironment());
   useEffect(() => {
@@ -39,6 +81,8 @@ function App() {
   const setHandMode = useHandUiStore((s) => s.setHandMode);
   const [showWelcome, setShowWelcome] = useState(true);
   const [showHandInstructions, setShowHandInstructions] = useState(false);
+  const welcomeReadyAt = useRef(Date.now() + 650);
+  const welcomePointerArmed = useRef(false);
 
   const [projectsModelFocus, setProjectsModelFocus] = useState<'arc' | 'fusion' | null>(null);
   const [hintOutlineUntilMs, setHintOutlineUntilMs] = useState<number | null>(null);
@@ -62,6 +106,10 @@ function App() {
 
   const completeWelcome = useCallback(
     (useHand: boolean) => {
+      if (Date.now() < welcomeReadyAt.current || !welcomePointerArmed.current) {
+        return;
+      }
+      welcomePointerArmed.current = false;
       setShowWelcome(false);
       if (useHand) {
         setHandMode(true);
@@ -70,6 +118,12 @@ function App() {
     },
     [setHandMode],
   );
+
+  const armWelcomeChoice = useCallback(() => {
+    if (Date.now() >= welcomeReadyAt.current) {
+      welcomePointerArmed.current = true;
+    }
+  }, []);
 
   const boringWayOpenResume = useCallback(() => {
     const a = document.createElement('a');
@@ -187,6 +241,7 @@ function App() {
               <button
                 type="button"
                 className="welcome-gate__btn clickable-hover"
+                onPointerDown={armWelcomeChoice}
                 onClick={() => completeWelcome(true)}
               >
                 Fun Way
@@ -194,6 +249,7 @@ function App() {
               <button
                 type="button"
                 className="welcome-gate__btn clickable-hover"
+                onPointerDown={armWelcomeChoice}
                 onClick={() => completeWelcome(false)}
               >
                 Normal Way
@@ -201,6 +257,7 @@ function App() {
               <button
                 type="button"
                 className="welcome-gate__btn clickable-hover"
+                onPointerDown={armWelcomeChoice}
                 onClick={boringWayOpenResume}
               >
                 Boring Way
@@ -218,31 +275,34 @@ function App() {
         />
       ) : null}
 
-      <Canvas
-        shadows
-        frameloop={handMode ? 'always' : 'demand'}
-        dpr={canvasDpr}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-        onPointerMissed={() => {
-          if (activeId === 'projects' && projectsModelFocus) {
-            setProjectsModelFocus(null);
-            return;
-          }
-          clearDetail();
-        }}
-      >
-        <GarageScene
-          activeId={activeId}
-          cameraDebugEnabled={false}
-          hoveredId={hoveredId}
-          onHoverChange={setHoveredId}
-          onCameraPoseChange={() => {}}
-          onSelect={setActiveId}
-          projectsModelFocus={projectsModelFocus}
-          onProjectsModelSelect={setProjectsModelFocus}
-          hintOutlineUntilMs={hintOutlineUntilMs}
-        />
-      </Canvas>
+      <CanvasErrorBoundary>
+        <Canvas
+          shadows
+          frameloop={handMode ? 'always' : 'demand'}
+          dpr={canvasDpr}
+          style={{ position: 'relative', zIndex: 0 }}
+          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+          onPointerMissed={() => {
+            if (activeId === 'projects' && projectsModelFocus) {
+              setProjectsModelFocus(null);
+              return;
+            }
+            clearDetail();
+          }}
+        >
+          <GarageScene
+            activeId={activeId}
+            cameraDebugEnabled={false}
+            hoveredId={hoveredId}
+            onHoverChange={setHoveredId}
+            onCameraPoseChange={() => {}}
+            onSelect={setActiveId}
+            projectsModelFocus={projectsModelFocus}
+            onProjectsModelSelect={setProjectsModelFocus}
+            hintOutlineUntilMs={hintOutlineUntilMs}
+          />
+        </Canvas>
+      </CanvasErrorBoundary>
 
       <div className="hud">
         {activeItem ? (

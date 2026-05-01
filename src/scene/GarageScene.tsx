@@ -1521,7 +1521,7 @@ function Plate({
 function CoffeeMachine({ highlighted = false }: { highlighted?: boolean }) {
   void highlighted;
   const model = useFittedGLTF(
-    '/models/coffee_machine.glb',
+    '/models/coffee_machine.glb?v=real-20260501',
     [1.05, 1.22, 0.92],
     [0, Math.PI / 2, 0],
     { textureAnisotropy: 8 },
@@ -1544,7 +1544,7 @@ function Laptop({
   highlighted?: boolean;
 }) {
   void highlighted;
-  const model = useFittedGLTF('/models/macbook_air_m4.glb', [1.5, 0.95, 1.0], [0, 0, 0], {
+  const model = useFittedGLTF('/models/macbook_air_m4.glb?v=real-20260501', [1.5, 0.95, 1.0], [0, 0, 0], {
     textureAnisotropy: 8,
   });
   const { invalidate } = useThree();
@@ -1992,7 +1992,7 @@ function Laptop({
 }
 
 function ArcReactor() {
-  const model = useFittedGLTF('/models/arc_reactor.glb', [0.72, 0.28, 0.72], [-Math.PI / 2, 0, 0], {
+  const model = useFittedGLTF('/models/arc_reactor.glb?v=real-20260501', [0.72, 0.28, 0.72], [-Math.PI / 2, 0, 0], {
     castShadow: true,
     textureAnisotropy: 8,
   });
@@ -2010,7 +2010,7 @@ function ArcReactor() {
 }
 
 function FusionLamp() {
-  const model = useFittedGLTF('/models/generator.glb', [0.42, 0.36, 0.42], [0, 0.24, 0], {
+  const model = useFittedGLTF('/models/generator.glb?v=real-20260501', [0.42, 0.36, 0.42], [0, 0.24, 0], {
     castShadow: true,
     textureAnisotropy: 8,
   });
@@ -2648,7 +2648,7 @@ function blackenCrvPlateLettersOnBodyDark(root: THREE.Object3D) {
 
 function CRV({ highlighted = false }: { highlighted?: boolean }) {
   void highlighted;
-  const model = useFittedGLTF('/models/honda_cr-v.glb', [8.4, 3.1, 3.95], [0, Math.PI / 2, 0], {
+  const model = useFittedGLTF('/models/honda_cr-v.glb?v=real-20260501', [8.4, 3.1, 3.95], [0, Math.PI / 2, 0], {
     castShadow: true,
     textureAnisotropy: 8,
   });
@@ -2667,11 +2667,11 @@ function CRV({ highlighted = false }: { highlighted?: boolean }) {
   );
 }
 
-useGLTF.preload('/models/coffee_machine.glb');
-useGLTF.preload('/models/macbook_air_m4.glb');
-useGLTF.preload('/models/honda_cr-v.glb');
-useGLTF.preload('/models/arc_reactor.glb');
-useGLTF.preload('/models/generator.glb');
+useGLTF.preload('/models/coffee_machine.glb?v=real-20260501');
+useGLTF.preload('/models/macbook_air_m4.glb?v=real-20260501');
+useGLTF.preload('/models/honda_cr-v.glb?v=real-20260501');
+useGLTF.preload('/models/arc_reactor.glb?v=real-20260501');
+useGLTF.preload('/models/generator.glb?v=real-20260501');
 
 export function GarageScene({
   activeId,
