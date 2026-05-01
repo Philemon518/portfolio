@@ -972,10 +972,7 @@ canvas {
   --arc-media-top-y: calc(var(--arc-back-gap) + clamp(4.9rem, 8vh, 5.8rem));
   --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
   --arc-main-top-y: calc(100svh - var(--arc-bottom-pad) - var(--arc-main-max-h));
-  --arc-polaroid-y: min(
-    calc(var(--arc-video-bottom-y) + clamp(7rem, 9.5vw, 8.8rem)),
-    calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
-  );
+  --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5);
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -985,10 +982,7 @@ canvas {
 /* Media stack: Back button first, then YouTube, then polaroids. */
 .arc-hud-anchors.arc-hud-anchors--media-below-back {
   --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
-  --arc-polaroid-y: min(
-    calc(var(--arc-video-bottom-y) + clamp(7rem, 9.5vw, 8.8rem)),
-    calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
-  );
+  --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5);
 }
 
 .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
@@ -1166,10 +1160,7 @@ canvas {
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
     --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
-    --arc-polaroid-y: min(
-      calc(var(--arc-video-bottom-y) + clamp(6.2rem, 12vw, 7.6rem)),
-      calc(var(--arc-main-top-y) - 0.5rem)
-    );
+    --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5);
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
@@ -1215,10 +1206,7 @@ canvas {
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
     --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
-    --arc-polaroid-y: min(
-      calc(var(--arc-video-bottom-y) + clamp(5rem, 20vw, 6.1rem)),
-      calc(var(--arc-main-top-y) - 0.35rem)
-    );
+    --arc-polaroid-y: calc((var(--arc-video-bottom-y) + var(--arc-main-top-y)) * 0.5);
   }
 
   .arc-hud-anchors.arc-hud-anchors--media-below-back .arc-reactor-media-col {
