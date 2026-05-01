@@ -2,6 +2,8 @@
 
 A React + Three.js portfolio concept built as a stylized 3D garage, with optional MediaPipe hand control from the HUD (top right). Intended for **desktop** browsers.
 
+**Git LFS:** `public/models/*.glb` are tracked with [Git LFS](https://git-lfs.com/) (GitHub’s 100 MB blob limit). Install Git LFS (`brew install git-lfs` / package manager, then `git lfs install`) before cloning so models are real files, not pointer stubs. Vercel checks out LFS assets during builds when LFS is enabled for the repo.
+
 ## Deploy to Vercel
 
 1. Import the Git repo in Vercel.
