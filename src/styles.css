@@ -973,7 +973,7 @@ canvas {
   --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
   --arc-main-top-y: calc(100svh - var(--arc-bottom-pad) - var(--arc-main-max-h));
   --arc-polaroid-y: min(
-    calc(var(--arc-video-bottom-y) + clamp(5.9rem, 8vw, 7.4rem)),
+    calc(var(--arc-video-bottom-y) + clamp(7rem, 9.5vw, 8.8rem)),
     calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
   );
   position: absolute;
@@ -986,7 +986,7 @@ canvas {
 .arc-hud-anchors.arc-hud-anchors--media-below-back {
   --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
   --arc-polaroid-y: min(
-    calc(var(--arc-video-bottom-y) + clamp(5.9rem, 8vw, 7.4rem)),
+    calc(var(--arc-video-bottom-y) + clamp(7rem, 9.5vw, 8.8rem)),
     calc(var(--arc-main-top-y) - clamp(0.5rem, 1.4vh, 1rem))
   );
 }
@@ -1167,7 +1167,7 @@ canvas {
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
     --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
     --arc-polaroid-y: min(
-      calc(var(--arc-video-bottom-y) + clamp(5.1rem, 11vw, 6.6rem)),
+      calc(var(--arc-video-bottom-y) + clamp(6.2rem, 12vw, 7.6rem)),
       calc(var(--arc-main-top-y) - 0.5rem)
     );
   }
@@ -1216,7 +1216,7 @@ canvas {
   .arc-hud-anchors.arc-hud-anchors--media-below-back {
     --arc-video-bottom-y: calc(var(--arc-media-top-y) + var(--arc-youtube-h));
     --arc-polaroid-y: min(
-      calc(var(--arc-video-bottom-y) + clamp(4.1rem, 18vw, 5.2rem)),
+      calc(var(--arc-video-bottom-y) + clamp(5rem, 20vw, 6.1rem)),
       calc(var(--arc-main-top-y) - 0.35rem)
     );
   }
