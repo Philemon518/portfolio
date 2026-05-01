@@ -1,6 +1,182 @@
-Pause at 0.00s for 0.33s
-Pause at 14.49s for 0.06s
-Pause at 17.15s for 0.14s
-Pause at 17.29s for 2.00s
-Pause at 27.19s for 1.44s
-Pause at 29.05s for 0.84s
+Detailed Timing Log
+========================================
+Segment 1:
+Original Timing: [0.33s - 6.24s]
+Adjusted Timing: [0.33s - 3.45s]
+Text: this is my school you are here because
+
+Segment 2:
+Original Timing: [3.99s - 8.04s]
+Adjusted Timing: [3.99s - 6.51s]
+Text: I've given you an opportunity why is it
+
+Segment 3:
+Original Timing: [6.24s - 9.90s]
+Adjusted Timing: [6.51s - 9.19s]
+Text: your school but why am I was in the
+
+Segment 4:
+Original Timing: [8.04s - 12.06s]
+Adjusted Timing: [9.19s - 11.59s]
+Text: wrong what do I have to listen to you
+
+Segment 5:
+Original Timing: [9.90s - 14.49s]
+Adjusted Timing: [11.59s - 14.55s]
+Text: when you have zero to say because I'm
+
+Segment 6:
+Original Timing: [12.06s - 17.15s]
+Adjusted Timing: [14.55s - 17.29s]
+Text: young all my life I've been young so I
+
+Segment 7:
+Original Timing: [14.49s - 17.15s]
+Adjusted Timing: [17.29s - 19.21s]
+Text: never get a turn
+
+Segment 8:
+Original Timing: [19.29s - 24.46s]
+Adjusted Timing: [19.29s - 22.05s]
+Text: this school is lost you asked me you're
+
+Segment 9:
+Original Timing: [21.79s - 26.29s]
+Adjusted Timing: [22.05s - 25.53s]
+Text: lost everybody talks to me like I'm the
+
+Segment 10:
+Original Timing: [24.46s - 27.19s]
+Adjusted Timing: [25.53s - 28.63s]
+Text: one you know I should change why should
+
+Segment 11:
+Original Timing: [26.29s - 29.05s]
+Adjusted Timing: [28.63s - 29.89s]
+Text: I change
+
+Segment 12:
+Original Timing: [27.19s - 31.78s]
+Adjusted Timing: [29.89s - 32.55s]
+Text: I've never even got to find out who I am
+
+Segment 13:
+Original Timing: [29.05s - 33.94s]
+Adjusted Timing: [32.55s - 35.67s]
+Text: you want me to change it's crazy you
+
+Segment 14:
+Original Timing: [31.78s - 35.65s]
+Adjusted Timing: [35.67s - 39.35s]
+Text: tell me I'm bad before I even get to be
+
+Segment 15:
+Original Timing: [33.94s - 38.26s]
+Adjusted Timing: [39.35s - 42.09s]
+Text: anything what the hell is that original
+
+Segment 16:
+Original Timing: [35.65s - 40.33s]
+Adjusted Timing: [42.09s - 44.61s]
+Text: sin or something everybody played orm on
+
+Segment 17:
+Original Timing: [38.26s - 42.16s]
+Adjusted Timing: [44.61s - 47.25s]
+Text: a park bench in the Bronx when you tell
+
+Segment 18:
+Original Timing: [40.33s - 44.17s]
+Adjusted Timing: [47.25s - 49.81s]
+Text: you some Plato he went afraid
+
+Segment 19:
+Original Timing: [42.16s - 46.26s]
+Adjusted Timing: [49.81s - 53.53s]
+Text: Diogenes you an afraid socrata you
+
+Segment 20:
+Original Timing: [44.17s - 48.34s]
+Adjusted Timing: [53.53s - 56.81s]
+Text: weren't afraid of anything they were men
+
+Segment 21:
+Original Timing: [46.26s - 49.39s]
+Adjusted Timing: [56.81s - 59.01s]
+Text: why are you the headmaster none the
+
+Segment 22:
+Original Timing: [48.34s - 50.89s]
+Adjusted Timing: [59.01s - 60.55s]
+Text: student to understand
+
+Segment 23:
+Original Timing: [49.39s - 53.71s]
+Adjusted Timing: [60.55s - 63.79s]
+Text: I earned your respect but you know if
+
+Segment 24:
+Original Timing: [50.89s - 55.87s]
+Adjusted Timing: [63.79s - 66.07s]
+Text: they're in mind what is that it's you
+
+Segment 25:
+Original Timing: [53.71s - 57.70s]
+Adjusted Timing: [66.07s - 68.77s]
+Text: that wants to a before you even start
+
+Segment 26:
+Original Timing: [55.87s - 62.53s]
+Adjusted Timing: [68.77s - 72.19s]
+Text: but when I say I want the same thing I'm
+
+Segment 27:
+Original Timing: [57.70s - 64.69s]
+Adjusted Timing: [72.19s - 74.45s]
+Text: nuts right not gonna cry I'm gonna find
+
+Segment 28:
+Original Timing: [62.53s - 67.00s]
+Adjusted Timing: [74.45s - 77.67s]
+Text: my place in this world count on it this
+
+Segment 29:
+Original Timing: [64.69s - 69.49s]
+Adjusted Timing: [77.67s - 80.09s]
+Text: schools been a miracle for me but not
+
+Segment 30:
+Original Timing: [67.00s - 75.70s]
+Adjusted Timing: [80.09s - 82.15s]
+Text: because of you because somebody mr.
+
+Segment 31:
+Original Timing: [69.49s - 79.54s]
+Adjusted Timing: [82.15s - 84.53s]
+Text: Hoffman finally saw me and more than
+
+Segment 32:
+Original Timing: [75.70s - 81.94s]
+Adjusted Timing: [84.53s - 86.43s]
+Text: that somebody a grown person decided I
+
+Segment 33:
+Original Timing: [79.54s - 85.30s]
+Adjusted Timing: [86.43s - 89.05s]
+Text: was good before I was good and you want
+
+Segment 34:
+Original Timing: [81.94s - 87.34s]
+Adjusted Timing: [89.05s - 91.57s]
+Text: to throw me out of that then you know
+
+Segment 35:
+Original Timing: [85.30s - 89.85s]
+Adjusted Timing: [91.57s - 94.67s]
+Text: what I say I've never met your God and I
+
+Segment 36:
+Original Timing: [87.34s - 89.85s]
+Adjusted Timing: [94.67s - 95.43s]
+Text: don't want to
+

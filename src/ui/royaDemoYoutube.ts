@@ -75,8 +75,53 @@ export function extractYoutubeVideoId(raw: string): string | null {
 export type RoyaPauseEvent = { pauseAtSec: number; holdSec: number };
 
 const PAUSE_LINE_RE = /Pause at (\d+\.?\d*)s for (\d+\.?\d*)s/i;
+const DETAILED_TIMING_RE =
+  /Original Timing: \[(\d+\.?\d*)s - (\d+\.?\d*)s\]\s*\nAdjusted Timing: \[(\d+\.?\d*)s - (\d+\.?\d*)s\]/g;
 
-/** Parses `demo_cli.txt` lines from the Royalink pipeline. */
+function roundTiming(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
+function addPauseEvent(out: RoyaPauseEvent[], pauseAtSec: number, holdSec: number) {
+  const pause = roundTiming(pauseAtSec);
+  const hold = roundTiming(holdSec);
+  if (hold <= 0.01) {
+    return;
+  }
+  const existing = out.find((ev) => Math.abs(ev.pauseAtSec - pause) < 0.01);
+  if (existing) {
+    existing.holdSec = roundTiming(existing.holdSec + hold);
+    return;
+  }
+  out.push({ pauseAtSec: pause, holdSec: hold });
+}
+
+function parseDetailedTimingSchedule(text: string): RoyaPauseEvent[] {
+  const rows = [...text.matchAll(DETAILED_TIMING_RE)].map((m) => ({
+    originalStart: Number(m[1]),
+    adjustedStart: Number(m[3]),
+  }));
+
+  if (rows.length === 0) {
+    return [];
+  }
+
+  const out: RoyaPauseEvent[] = [];
+
+  let cumulativeVideoPauseTime = 0;
+  for (const row of rows) {
+    const pauseDuration = Math.max(0, row.adjustedStart - row.originalStart - cumulativeVideoPauseTime);
+    if (pauseDuration > 0.05) {
+      addPauseEvent(out, row.originalStart, pauseDuration);
+      cumulativeVideoPauseTime += pauseDuration;
+    }
+  }
+
+  out.sort((a, b) => a.pauseAtSec - b.pauseAtSec);
+  return out;
+}
+
+/** Parses either compact `Pause at ...` files or detailed timing logs from the RoyaLink pipeline. */
 export function parseRoyaPauseSchedule(text: string): RoyaPauseEvent[] {
   const out: RoyaPauseEvent[] = [];
   for (const line of text.split(/\r?\n/)) {
@@ -84,8 +129,11 @@ export function parseRoyaPauseSchedule(text: string): RoyaPauseEvent[] {
     if (!m) {
       continue;
     }
-    out.push({ pauseAtSec: Number(m[1]), holdSec: Number(m[2]) });
+    addPauseEvent(out, Number(m[1]), Number(m[2]));
   }
-  out.sort((a, b) => a.pauseAtSec - b.pauseAtSec);
-  return out;
+  if (out.length > 0) {
+    out.sort((a, b) => a.pauseAtSec - b.pauseAtSec);
+    return out;
+  }
+  return parseDetailedTimingSchedule(text);
 }
