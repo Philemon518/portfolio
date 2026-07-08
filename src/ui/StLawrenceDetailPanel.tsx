@@ -6,7 +6,6 @@ const RESUME_DEGREE_TITLE = 'Bachelor of Science in Physics and Computer Science
 const RESUME_LINES = [
   'St. Lawrence University, Canton, NY',
   'Graduation date: May 2029',
-  'GPA: 3.500/4.000',
   'Relevant coursework: University Physics, Modern Physics, Calculus 1, 2, 3, CS Intro courses',
   "Honours: UWC Scholarship, Partaking 3-2 Engineering Program at the University",
 ] as const;
