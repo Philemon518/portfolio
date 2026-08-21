@@ -7,10 +7,9 @@ A React + Three.js portfolio concept built as a stylized 3D garage, with optiona
 ## Deploy to Railway
 
 1. Create a Railway project linked to [`Philemon518/portfolio`](https://github.com/Philemon518/portfolio) (repo root = this folder).
-2. Railway auto-detects [`railway.toml`](railway.toml) and builds with the [`Dockerfile`](Dockerfile) (Node build → nginx serves `dist/`).
-3. **Enable Git LFS** in Railway: Project Settings → Git → Git Large File Storage.
-4. Deploy and confirm the build log shows `Verified GLB model assets are hydrated.`
-5. Smoke test on the `*.railway.app` URL:
+2. Railway auto-detects [`railway.toml`](railway.toml) and builds with the [`Dockerfile`](Dockerfile). The Dockerfile **clones the repo with Git LFS** during the build (Railway’s Docker context only includes LFS pointer files, not the real GLB blobs).
+3. Deploy and confirm the build log shows `Verified GLB model assets are hydrated.`
+4. Smoke test on the `*.railway.app` URL:
    - Welcome screen loads
    - `/models/honda_cr-v.glb` returns a ~104 MB binary (not HTML)
    - All 5 GLB models appear in the 3D scene
