@@ -524,6 +524,13 @@ function useFittedGLTF(
   options: FittedGLTFOptions = {},
 ) {
   const gltf = useGLTF(url);
+  const { invalidate } = useThree();
+
+  // frameloop="demand" stops rendering once the camera settles. Large GLBs can
+  // finish loading after that, so force a repaint when each model hydrates.
+  useLayoutEffect(() => {
+    invalidate();
+  }, [gltf, invalidate, url]);
 
   return useMemo<FittedGLTF>(() => {
     const {
@@ -2712,6 +2719,24 @@ export function GarageScene({
       gl.toneMappingExposure = 1;
     };
   }, [gl, invalidate]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const syncPosters = () => {
+      if (cancelled) {
+        return;
+      }
+      if (posterTextures.juggernog.image && posterTextures.stLawrence.image) {
+        invalidate();
+        return;
+      }
+      requestAnimationFrame(syncPosters);
+    };
+    syncPosters();
+    return () => {
+      cancelled = true;
+    };
+  }, [posterTextures, invalidate]);
 
   useEffect(() => {
     if (hintOutlineUntilMs == null) {
