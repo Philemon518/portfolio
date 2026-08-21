@@ -1,8 +1,8 @@
 import { portfolioItems } from '../data/portfolioItems';
 
-const WHOAMI_TITLE = 'Who am I?';
+export const WHOAMI_TITLE = 'Who am I?';
 
-const WHOAMI_BODY = `My name is Philemon Weiming Mulunda. My father is Zambian, and my mom is from Shanghai, but I was born and raised in Hong Kong. I had to learn multiple languages just to communicate with my family and I guess that didn't stop. I now speak English and Cantonese fluently, Mandarin and Norwegian at an advanced level, and amateur French and German. Being complex from birth made me like complex things. Physics, math, chemistry, computer algorithms, genetic mutations, anything that was hard. The itch to learn more and do more is just who I am.
+export const WHOAMI_BODY = `My name is Philemon Weiming Mulunda. My father is Zambian, and my mom is from Shanghai, but I was born and raised in Hong Kong. I had to learn multiple languages just to communicate with my family and I guess that didn't stop. I now speak English and Cantonese fluently, Mandarin and Norwegian at an advanced level, and amateur French and German. Being complex from birth made me like complex things. Physics, math, chemistry, computer algorithms, genetic mutations, anything that was hard. The itch to learn more and do more is just who I am.
 
 That all led to me being a double major in physics and computer science at university and a UWC scholar who builds technology with intention. I focus on difficult problems, especially those where engineering, sustainability, and quality of life intersect. At the core, I'm motivated by the belief that innovation should increase human capability, and not just efficiency.
 

@@ -1,14 +1,19 @@
 /** Campus aerial: `public/posters/slu-campus-polaroid.png` */
 const CAMPUS_POLAROID_SRC = '/posters/slu-campus-polaroid.png';
 
-const RESUME_DEGREE_TITLE = 'Bachelor of Science in Physics and Computer Science';
+export const SLU_RESUME_DEGREE_TITLE = 'Bachelor of Science in Physics and Computer Science';
 
-const RESUME_LINES = [
+export const SLU_RESUME_LINES = [
   'St. Lawrence University, Canton, NY',
   'Graduation date: May 2029',
   'Relevant coursework: University Physics, Modern Physics, Calculus 1, 2, 3, CS Intro courses',
   "Honours: UWC Scholarship, Partaking 3-2 Engineering Program at the University",
 ] as const;
+
+export const SLU_INTRO_TITLE = 'St. Lawrence University';
+
+export const SLU_INTRO_BODY =
+  'This is where I am currently studying to get my Bachelors Degree.';
 
 /** Top row: campus polaroid + resume share one top (bachelor line); intro bottom-left. */
 export function StLawrenceDetailPanel() {
@@ -25,10 +30,10 @@ export function StLawrenceDetailPanel() {
         <div className="slu-panel slu-panel--resume" data-scroll-root>
           <div className="slu-resume-heading">
             <img className="slu-resume-logo" src="/posters/st-lawrence.png" alt="" />
-            <span className="slu-resume-degree">{RESUME_DEGREE_TITLE}</span>
+            <span className="slu-resume-degree">{SLU_RESUME_DEGREE_TITLE}</span>
           </div>
           <ul className="slu-resume-list">
-            {RESUME_LINES.map((line) => (
+            {SLU_RESUME_LINES.map((line) => (
               <li key={line}>{line}</li>
             ))}
           </ul>
@@ -36,10 +41,8 @@ export function StLawrenceDetailPanel() {
       </div>
 
       <div className="slu-panel slu-panel--intro">
-        <h2 className="slu-brand-title">St. Lawrence University</h2>
-        <p className="slu-intro-body">
-          This is where I am currently studying to get my Bachelors Degree.
-        </p>
+        <h2 className="slu-brand-title">{SLU_INTRO_TITLE}</h2>
+        <p className="slu-intro-body">{SLU_INTRO_BODY}</p>
       </div>
     </div>
   );

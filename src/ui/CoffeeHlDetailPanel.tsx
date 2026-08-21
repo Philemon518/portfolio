@@ -5,7 +5,7 @@ const ALUM_POLAROID_SRC = '/coffee-hl/alum-meeting.png';
 const MENU_HOT_SRC = '/coffee-hl/menu-hot.png';
 const MENU_COLD_SRC = '/coffee-hl/menu-cold.png';
 
-const STATS_LINES = [
+export const COFFEE_STATS_LINES = [
   'Coffee HL duration: December 2023 – May 2024 (6 months)',
   'Money donated to charity: $500 USD',
   'Skills built and used: business planning, customer feedback, product experimentation, finance tracking, marketing, barista skills, and graphic design.',
@@ -35,7 +35,7 @@ export function CoffeeHlDetailPanel() {
         <div className="coffee-panel coffee-panel--stats">
           <h3 className="coffee-attributes-heading">Attributes:</h3>
           <ul className="coffee-stats-list">
-            {STATS_LINES.map((line) => (
+            {COFFEE_STATS_LINES.map((line) => (
               <li key={line}>{line}</li>
             ))}
           </ul>

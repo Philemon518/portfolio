@@ -1,0 +1,32 @@
+# Philemon Mulunda — 3D Garage Portfolio
+
+> Machine-readable overview for AI agents. Full structured content is in `src/data/aiSiteManifest.ts`, injected into the built page as `#portfolio-ai-manifest`, and logged to the browser console as `[portfolio-ai-manifest]`.
+
+## What this site is
+
+philemonmulunda.com is an interactive 3D garage portfolio built with React and Three.js. Each object in the scene represents a project, job, school, or personal story. Visitors explore by hovering and clicking 3D objects to open detail panels.
+
+## Author
+
+Philemon Weiming Mulunda — double major in Computer Science and Physics at St. Lawrence University.
+
+- Email: pwmulu25@stlawu.edu
+- LinkedIn: https://linkedin.com/in/philemonmulunda
+- GitHub: https://github.com/Philemon518
+- Resume PDF: /phil-resume.pdf
+
+## Scene objects (short index)
+
+| Label | Title |
+|-------|-------|
+| 2000 CR-V | Self-Mechanic Project |
+| Juggernog | Call of Duty Zombies poster + Who am I? bio |
+| St. Lawrence | University poster + education resume block |
+| MacBook Air | JimBo and Roya Link laptop folders with READMEs and demos |
+| Project Box | Arc Reactor and DIY Nuclear Fusion Lamp engineering projects |
+| Coffee HL | Student-run coffee NGO during high school |
+| NY Plate | Calculus 3 Math TA at St. Lawrence |
+| Norway Plate | BCC STI storage manager internship |
+| HK Plate | Li Po Chun UWC and HKUST quantum summer programme |
+
+For full text of every section, read `src/data/aiSiteManifest.ts` or fetch the JSON from the live site's `#portfolio-ai-manifest` script tag.

@@ -9,14 +9,14 @@ const POLAROID_HHO_SRC = '/engineering/arc-hho-generator.jpg';
 /** RC nitro / helicopter engine (PNG in `public/engineering/`; re-encode HEIC to PNG/JPEG for web). */
 const POLAROID_ENGINE_SRC = '/engineering/helicopter-engine.png';
 
-const MAIN_TITLE = 'Real Life Iron Man Arc Reactor';
+export const ARC_REACTOR_MAIN_TITLE = 'Real Life Iron Man Arc Reactor';
 
-const MAIN_BODY =
+export const ARC_REACTOR_MAIN_BODY =
   'Ever since the 6th grade, I\'ve always asked "If H2O has both fuel and oxydiser, why don\'t we use water as a fuel?" This lead to this rabit whole and the creation of this project.';
 
-const SIDE_TITLE = 'What is it?';
+export const ARC_REACTOR_SIDE_TITLE = 'What is it?';
 
-const SIDE_PARAS = [
+export const ARC_REACTOR_SIDE_PARAS = [
   'After learning that was is H2O, I quickly saw that water could be a inexpensive fuel source, so I start researching on my iPad as a 12 year old. This lead to me learning electrolysis, ionic bonds, and electromagnetism as a 6th grader.',
   'I also stumbled upon a channel called Alex Lab where he turned water electrolysis into the main reactor that powers Iron Man. He used it to provide fuel for the arm repulsors, a pressuriser to have pump artificial muscles for assisted strength. It felt Eureka! He also uploaded detailed documentation on his research and treated the project with respect and high quality.',
   'In high school, I used his research as reference and made a small helicopter engine run on a Hydrogen and Oxygen generator that uses water, Sodium hydroxide, and electricity. This technology is a work in progress, but I hope to one day manufacter these generators to have it replace natural gas as water is more abundant and has zero carbon emissions when combusted.',
@@ -70,9 +70,9 @@ export function ArcReactorDetailPanel() {
       </div>
 
       <aside className="arc-reactor-side-panel arc-glass-panel" data-scroll-root>
-        <h2 className="arc-side-panel-title">{SIDE_TITLE}</h2>
+        <h2 className="arc-side-panel-title">{ARC_REACTOR_SIDE_TITLE}</h2>
         <div className="arc-side-panel-body">
-          {SIDE_PARAS.map((p, i) => (
+          {ARC_REACTOR_SIDE_PARAS.map((p, i) => (
             <p key={i} className="arc-side-para">
               {p}
             </p>
@@ -81,8 +81,8 @@ export function ArcReactorDetailPanel() {
       </aside>
 
       <aside className="arc-reactor-main-panel arc-glass-panel" data-scroll-root>
-        <h2 className="arc-main-title">{MAIN_TITLE}</h2>
-        <p className="arc-main-body">{MAIN_BODY}</p>
+        <h2 className="arc-main-title">{ARC_REACTOR_MAIN_TITLE}</h2>
+        <p className="arc-main-body">{ARC_REACTOR_MAIN_BODY}</p>
       </aside>
     </div>
   );

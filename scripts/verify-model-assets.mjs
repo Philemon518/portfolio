@@ -39,6 +39,7 @@ if (failures.length > 0) {
     console.error(`- ${failure}`);
   }
   console.error('\nFix locally: git lfs install && git lfs pull');
+  console.error('Fix on Railway: Project Settings -> Git -> enable Git Large File Storage (LFS), then redeploy.');
   console.error('Fix on Vercel: Project Settings -> Git -> enable Git Large File Storage (LFS), then redeploy.\n');
   process.exit(1);
 }

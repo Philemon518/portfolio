@@ -2,18 +2,41 @@
 
 A React + Three.js portfolio concept built as a stylized 3D garage, with optional MediaPipe hand control from the HUD (top right). Intended for **desktop** browsers.
 
-**Git LFS:** `public/models/*.glb` are tracked with [Git LFS](https://git-lfs.com/) (GitHub’s 100 MB blob limit). Install Git LFS (`brew install git-lfs` / package manager, then `git lfs install`) before cloning so models are real files, not pointer stubs. Vercel checks out LFS assets during builds when LFS is enabled for the repo.
+**Git LFS:** `public/models/*.glb` are tracked with [Git LFS](https://git-lfs.com/) (GitHub’s 100 MB blob limit). Install Git LFS (`brew install git-lfs` / package manager, then `git lfs install`) before cloning so models are real files, not pointer stubs. Railway and other hosts must enable LFS when cloning the repo.
 
-## Deploy to Vercel
+## Deploy to Railway
 
-1. Import the Git repo in Vercel.
-2. Set **Root Directory** to `portfolio3` (when the monorepo root is the parent folder).
-3. Framework: **Vite** (or leave auto-detect). **Build Command:** `npm run build`. **Output Directory:** `dist`. **Install Command:** `npm install`.
-4. No environment variables are required for this app; do not add client-exposed `VITE_*` secrets unless you intend them to be public in the bundle.
+1. Create a Railway project linked to [`Philemon518/portfolio`](https://github.com/Philemon518/portfolio) (repo root = this folder).
+2. Railway auto-detects [`railway.toml`](railway.toml) and builds with the [`Dockerfile`](Dockerfile) (Node build → nginx serves `dist/`).
+3. **Enable Git LFS** in Railway: Project Settings → Git → Git Large File Storage.
+4. Deploy and confirm the build log shows `Verified GLB model assets are hydrated.`
+5. Smoke test on the `*.railway.app` URL:
+   - Welcome screen loads
+   - `/models/honda_cr-v.glb` returns a ~104 MB binary (not HTML)
+   - All 5 GLB models appear in the 3D scene
 
-[`vercel.json`](vercel.json) pins the build, enables an SPA fallback rewrite, and sets baseline security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy` with `camera=(self)` for Fun Way). Static files under `dist/assets/` are still served before the rewrite.
+[`nginx.conf.template`](nginx.conf.template) serves static GLB files before the SPA fallback, sets security headers, and listens on Railway’s `$PORT`.
 
-Production uses **HTTPS** on Vercel, which is required for the webcam (`getUserMedia`) and clipboard APIs used by hand mode and the Roya Link demo.
+No environment variables are required for this app.
+
+### Custom domain (philemonmulunda.com)
+
+1. In Railway → Settings → Domains, add `philemonmulunda.com` and `www.philemonmulunda.com`.
+2. Copy the CNAME target Railway provides.
+3. At your DNS registrar, point `@` / `www` to Railway (follow Railway’s apex instructions if needed).
+4. Lower TTL on old Vercel DNS records before cutover for faster propagation.
+5. After HTTPS is active on Railway, remove or detach the domain from Vercel.
+
+Production uses **HTTPS**, which is required for the webcam (`getUserMedia`) and clipboard APIs used by hand mode and the Roya Link demo.
+
+## AI-readable content
+
+Portfolio text is duplicated for AI agents in three places (invisible in the UI):
+
+- [`src/data/aiSiteManifest.ts`](src/data/aiSiteManifest.ts) — canonical structured manifest in source
+- Browser console — logged as `[portfolio-ai-manifest]` on page load
+- Built HTML — `<script type="application/json" id="portfolio-ai-manifest">` injected at build time
+- [`public/llms.txt`](public/llms.txt) — short index for external crawlers
 
 ## Security notes
 
@@ -37,6 +60,7 @@ Production builds omit JS source maps (`vite.config.ts`) to reduce accidental so
 ## Key files
 
 - `src/data/portfolioItems.ts`: object names, descriptions, and camera presets
+- `src/data/aiSiteManifest.ts`: machine-readable copy of all portfolio content
 - `src/scene/GarageScene.tsx`: garage layout, lighting, interactive objects, and hover/click behavior
 - `src/scene/garageTextures.ts`: generated poster, plate, laptop, pegboard, and wall textures
 - `src/styles.css`: overlay UI and responsive layout
@@ -58,3 +82,13 @@ source .venv/bin/activate
 ```
 
 The web app itself is **Node-only** (`npm`).
+
+## Local Docker preview
+
+```bash
+npm run build
+docker build -t garage-portfolio .
+docker run -p 8080:8080 -e PORT=8080 garage-portfolio
+```
+
+Open `http://localhost:8080`.
