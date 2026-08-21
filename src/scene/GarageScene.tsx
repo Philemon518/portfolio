@@ -15,6 +15,7 @@ import { EffectComposer, Outline, Selection, Select } from '@react-three/postpro
 import * as THREE from 'three';
 import { defaultCamera, ItemId, portfolioItems } from '../data/portfolioItems';
 import { JIMBO_README_MD_TEXT, ROYA_LINK_README_MD_TEXT } from '../data/laptopReadmeTexts';
+import { PORTFOLIO_MODEL_URLS, scheduleCrVModelPreload } from '../lib/preloadPortfolioModels';
 import { JimBoDemoApp } from '../ui/JimBoDemoApp';
 import { RoyaLinkDemoApp } from '../ui/RoyaLinkDemoApp';
 import { GarageTextures, useGarageTextures } from './garageTextures';
@@ -2655,11 +2656,11 @@ function CRV({ highlighted = false }: { highlighted?: boolean }) {
   );
 }
 
-useGLTF.preload('/models/coffee_machine.glb?v=real-20260501');
-useGLTF.preload('/models/macbook_air_m4.glb?v=real-20260501');
-useGLTF.preload('/models/honda_cr-v.glb?v=real-20260501');
-useGLTF.preload('/models/arc_reactor.glb?v=real-20260501');
-useGLTF.preload('/models/generator.glb?v=real-20260501');
+useGLTF.preload(PORTFOLIO_MODEL_URLS.arcReactor);
+useGLTF.preload(PORTFOLIO_MODEL_URLS.coffee);
+useGLTF.preload(PORTFOLIO_MODEL_URLS.macbook);
+useGLTF.preload(PORTFOLIO_MODEL_URLS.generator);
+scheduleCrVModelPreload((url) => useGLTF.preload(url));
 
 export function GarageScene({
   activeId,

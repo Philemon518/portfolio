@@ -3,6 +3,7 @@ import { Component, type ErrorInfo, type ReactNode, useCallback, useEffect, useR
 import { ItemId, portfolioItems } from './data/portfolioItems';
 import { GarageScene } from './scene/GarageScene';
 import { isDesktopEnvironment } from './lib/desktopGate';
+import { preloadHandLandmarkerAssets } from './hand/preloadHandLandmarker';
 import { DesktopOnlyScreen } from './ui/DesktopOnlyScreen';
 import { HudCamera } from './ui/HudCamera';
 import { VirtualCursor } from './ui/VirtualCursor';
@@ -81,6 +82,7 @@ function App() {
   const setHandMode = useHandUiStore((s) => s.setHandMode);
   const [showWelcome, setShowWelcome] = useState(true);
   const [showHandInstructions, setShowHandInstructions] = useState(false);
+  const [warmRender, setWarmRender] = useState(true);
   const welcomeReadyAt = useRef(Date.now() + 650);
   const welcomePointerArmed = useRef(false);
 
@@ -129,6 +131,11 @@ function App() {
     }
   }, []);
 
+  const armFunWayChoice = useCallback(() => {
+    preloadHandLandmarkerAssets();
+    armWelcomeChoice();
+  }, [armWelcomeChoice]);
+
   const boringWayOpenResume = useCallback(() => {
     const a = document.createElement('a');
     a.href = `${import.meta.env.BASE_URL}phil-resume.pdf`;
@@ -148,9 +155,19 @@ function App() {
   }, []);
 
   const openFunWayInstructions = useCallback(() => {
+    preloadHandLandmarkerAssets();
     setHandMode(true);
     setShowHandInstructions(true);
   }, [setHandMode]);
+
+  useEffect(() => {
+    if (showWelcome) {
+      return undefined;
+    }
+    setWarmRender(true);
+    const id = window.setTimeout(() => setWarmRender(false), 25000);
+    return () => window.clearTimeout(id);
+  }, [showWelcome]);
 
   useEffect(() => {
     if (hintOutlineUntilMs == null) {
@@ -244,7 +261,7 @@ function App() {
               <button
                 type="button"
                 className="welcome-gate__btn clickable-hover"
-                onPointerDown={armWelcomeChoice}
+                onPointerDown={armFunWayChoice}
                 onClick={() => completeWelcome(true)}
               >
                 Fun Way
@@ -281,7 +298,7 @@ function App() {
       <CanvasErrorBoundary>
         <Canvas
           shadows
-          frameloop={handMode ? 'always' : 'demand'}
+          frameloop={handMode || warmRender ? 'always' : 'demand'}
           dpr={canvasDpr}
           style={{ position: 'relative', zIndex: 0 }}
           gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}

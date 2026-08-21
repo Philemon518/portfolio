@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react'
 import {
-  FilesetResolver,
   HandLandmarker,
   type HandLandmarkerResult,
 } from '@mediapipe/tasks-vision'
@@ -8,13 +7,9 @@ import { createEma2d } from './smoothing'
 import { createGestureEngine, isPinchPose } from './gestures'
 import { LM, type Landmark } from './landmarks'
 import { HAND_SCREEN_MAP_SPAN, landmarkTipToScreen } from './screenMapping'
+import { getHandModelWarmPromise, getVisionWasm, preloadHandLandmarkerAssets } from './preloadHandLandmarker'
 import { useHandUiStore } from '../stores/handUiStore'
 import { usePointerStore } from '../stores/pointerStore'
-
-const WASM_BASE =
-  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm'
-const MODEL_URL =
-  'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'
 
 export type HandHudPayload = {
   landmarks: Landmark[] | undefined
@@ -39,7 +34,10 @@ function landmarkAnchorToClient(lm: Landmark, mirror: boolean): { x: number; y: 
 }
 
 async function createLandmarker(): Promise<HandLandmarker> {
-  const wasm = await FilesetResolver.forVisionTasks(WASM_BASE)
+  preloadHandLandmarkerAssets()
+  const wasm = await Promise.all([getVisionWasm(), getHandModelWarmPromise()]).then(([resolvedWasm]) => resolvedWasm)
+  const MODEL_URL =
+    'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'
   const tryCreate = (delegate: 'GPU' | 'CPU') =>
     HandLandmarker.createFromOptions(wasm, {
       baseOptions: { modelAssetPath: MODEL_URL, delegate },
@@ -115,14 +113,29 @@ export function useHandPipeline(
     if (!videoEl) return
     stop()
     const epochAfterStop = startEpochRef.current
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
-      audio: false,
-    })
+
+    preloadHandLandmarkerAssets()
+
+    let stream: MediaStream
+    let landmarker: HandLandmarker
+    try {
+      ;[stream, landmarker] = await Promise.all([
+        navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false,
+        }),
+        createLandmarker(),
+      ])
+    } catch {
+      stop()
+      return
+    }
+
     if (epochAfterStop !== startEpochRef.current) {
       for (const t of stream.getTracks()) {
         t.stop()
       }
+      landmarker.close()
       return
     }
     activeMediaStreamRef.current = stream
@@ -131,6 +144,7 @@ export function useHandPipeline(
       for (const t of stream.getTracks()) {
         t.stop()
       }
+      landmarker.close()
       activeMediaStreamRef.current = null
       return
     }
@@ -138,17 +152,7 @@ export function useHandPipeline(
     try {
       await elAfterAcquire.play()
     } catch {
-      stop()
-      return
-    }
-    if (epochAfterStop !== startEpochRef.current || !videoRef.current) {
-      stop()
-      return
-    }
-    let landmarker: HandLandmarker
-    try {
-      landmarker = await createLandmarker()
-    } catch {
+      landmarker.close()
       stop()
       return
     }
