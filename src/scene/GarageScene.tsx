@@ -15,6 +15,7 @@ import { EffectComposer, Outline, Selection, Select } from '@react-three/postpro
 import * as THREE from 'three';
 import { defaultCamera, ItemId, portfolioItems } from '../data/portfolioItems';
 import { JIMBO_README_MD_TEXT, ROYA_LINK_README_MD_TEXT } from '../data/laptopReadmeTexts';
+import { isDesktopEnvironment } from '../lib/desktopGate';
 import { PORTFOLIO_MODEL_URLS, scheduleCrVModelPreload } from '../lib/preloadPortfolioModels';
 import { JimBoDemoApp } from '../ui/JimBoDemoApp';
 import { RoyaLinkDemoApp } from '../ui/RoyaLinkDemoApp';
@@ -260,6 +261,8 @@ interface GarageSceneProps {
   onProjectsModelSelect: (id: 'arc' | 'fusion' | null) => void;
   /** `Date.now()` deadline; while before this, all hoverable props flash outline (Hint button). */
   hintOutlineUntilMs: number | null;
+  /** When set, only this object is mounted (mobile one-at-a-time). */
+  soloId?: ItemId | null;
 }
 
 interface CameraDebugPose {
@@ -2656,11 +2659,13 @@ function CRV({ highlighted = false }: { highlighted?: boolean }) {
   );
 }
 
-useGLTF.preload(PORTFOLIO_MODEL_URLS.arcReactor);
-useGLTF.preload(PORTFOLIO_MODEL_URLS.coffee);
-useGLTF.preload(PORTFOLIO_MODEL_URLS.macbook);
-useGLTF.preload(PORTFOLIO_MODEL_URLS.generator);
-scheduleCrVModelPreload((url) => useGLTF.preload(url));
+if (typeof window !== 'undefined' && isDesktopEnvironment()) {
+  useGLTF.preload(PORTFOLIO_MODEL_URLS.arcReactor);
+  useGLTF.preload(PORTFOLIO_MODEL_URLS.coffee);
+  useGLTF.preload(PORTFOLIO_MODEL_URLS.macbook);
+  useGLTF.preload(PORTFOLIO_MODEL_URLS.generator);
+  scheduleCrVModelPreload((url) => useGLTF.preload(url));
+}
 
 export function GarageScene({
   activeId,
@@ -2672,24 +2677,29 @@ export function GarageScene({
   projectsModelFocus,
   onProjectsModelSelect,
   hintOutlineUntilMs,
+  soloId = null,
 }: GarageSceneProps) {
   const { gl, invalidate } = useThree();
   const textures = useGarageTextures();
   const [viewSettled, setViewSettled] = useState(false);
   const [projectsPieceHover, setProjectsPieceHover] = useState<'arc' | 'fusion' | null>(null);
+  const solo = soloId != null;
+  const includeItem = (id: ItemId) => soloId == null || soloId === id;
   const posterTextures = useMemo(() => {
     const loader = new THREE.TextureLoader();
-    const juggernog = loader.load('/posters/juggernog.jpg');
-    const stLawrence = loader.load('/posters/st-lawrence.png');
-
-    [juggernog, stLawrence].forEach((texture) => {
+    const loadPoster = (path: string) => {
+      const texture = loader.load(path);
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = 8;
       texture.needsUpdate = true;
-    });
+      return texture;
+    };
 
-    return { juggernog, stLawrence };
-  }, []);
+    return {
+      juggernog: soloId == null || soloId === 'juggernog' ? loadPoster('/posters/juggernog.jpg') : null,
+      stLawrence: soloId == null || soloId === 'stlawrence' ? loadPoster('/posters/st-lawrence.png') : null,
+    };
+  }, [soloId]);
   const interactionLocked = cameraDebugEnabled;
   const canHoverItem = (id: ItemId) => !interactionLocked && activeId !== id;
   const carHoverSuppressed = activeId === 'laptop';
@@ -2727,7 +2737,8 @@ export function GarageScene({
       if (cancelled) {
         return;
       }
-      if (posterTextures.juggernog.image && posterTextures.stLawrence.image) {
+      const pending = [posterTextures.juggernog, posterTextures.stLawrence].filter(Boolean);
+      if (pending.length === 0 || pending.every((texture) => texture?.image)) {
         invalidate();
         return;
       }
@@ -2778,8 +2789,8 @@ export function GarageScene({
 
   useEffect(() => {
     return () => {
-      posterTextures.juggernog.dispose();
-      posterTextures.stLawrence.dispose();
+      posterTextures.juggernog?.dispose();
+      posterTextures.stLawrence?.dispose();
     };
   }, [posterTextures]);
 
@@ -2837,185 +2848,230 @@ export function GarageScene({
 
       <GarageShell textures={textures} />
 
-      <Selection>
-        <Suspense fallback={null}>
-          <InteractiveGroup
-            id="juggernog"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('juggernog')}
-            position={[-6.15, 2.55, -6.88]}
-          >
-            <Poster
-              texture={posterTextures.juggernog}
-              width={1.58}
-              height={2.1}
-              highlighted={canOutlineItem('juggernog')}
-              frameColor="#564037"
+      {(() => {
+        const garageObjects = (
+          <Suspense fallback={null}>
+            {includeItem('juggernog') && posterTextures.juggernog ? (
+              <InteractiveGroup
+                id="juggernog"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('juggernog')}
+                position={[-6.15, 2.55, -6.88]}
+              >
+                <Poster
+                  texture={posterTextures.juggernog}
+                  width={1.58}
+                  height={2.1}
+                  highlighted={canOutlineItem('juggernog')}
+                  frameColor="#564037"
+                />
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('stlawrence') && posterTextures.stLawrence ? (
+              <InteractiveGroup
+                id="stlawrence"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('stlawrence')}
+                position={[8.55, 2.62, 2.15]}
+                rotation={[0, -Math.PI / 2, 0]}
+              >
+                <Poster
+                  texture={posterTextures.stLawrence}
+                  width={1.62}
+                  height={2.08}
+                  highlighted={canOutlineItem('stlawrence')}
+                  frameColor="#121315"
+                  backgroundColor="#ffffff"
+                  artWidth={1.34}
+                  artHeight={1.34}
+                  transparent
+                />
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('coffee') ? (
+              <InteractiveGroup
+                id="coffee"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('coffee')}
+                position={[-4.28, 1.38, -6.02]}
+                rotation={[0, -Math.PI / 2, 0]}
+              >
+                {solo ? (
+                  <CoffeeMachine />
+                ) : (
+                  <Select enabled={canOutlineItem('coffee')}>
+                    <CoffeeMachine highlighted={canOutlineItem('coffee')} />
+                  </Select>
+                )}
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('crv') ? (
+              <InteractiveGroup
+                id="crv"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('crv') && !carHoverSuppressed}
+                hitbox={{ size: [7.4, 3.2, 4.3], position: [0, 1.6, 0] }}
+                position={[1.35, 0, -0.15]}
+                rotation={[0, Math.PI + 0.18, 0]}
+              >
+                {solo ? (
+                  <CRV />
+                ) : (
+                  <Select enabled={canOutlineItem('crv')}>
+                    <CRV highlighted={canOutlineItem('crv')} />
+                  </Select>
+                )}
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('laptop') ? (
+              <InteractiveGroup
+                id="laptop"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('laptop')}
+                position={[0.86, 1.06, 8.32]}
+                rotation={[0, 0.04, 0]}
+              >
+                {solo ? (
+                  <Laptop
+                    active={activeId === 'laptop'}
+                    finderVisible={activeId === 'laptop' && viewSettled}
+                  />
+                ) : (
+                  <Select enabled={canOutlineItem('laptop')}>
+                    <Laptop
+                      active={activeId === 'laptop'}
+                      finderVisible={activeId === 'laptop' && viewSettled}
+                      highlighted={canOutlineItem('laptop')}
+                    />
+                  </Select>
+                )}
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('projects') ? (
+              <InteractiveGroup
+                id="projects"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('projects')}
+                position={[3.15, 1.06, 7.78]}
+                rotation={[0, -0.08, 0]}
+              >
+                <ProjectBox
+                  textures={textures}
+                  active={activeId === 'projects'}
+                  highlighted={canOutlineItem('projects')}
+                  projectsModelFocus={projectsModelFocus}
+                  hintFlash={hintFlashActive && activeId === 'projects'}
+                  onProjectsModelSelect={onProjectsModelSelect}
+                  onProjectPieceHover={setProjectsPieceHover}
+                />
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('plate-ny') ? (
+              <InteractiveGroup
+                id="plate-ny"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('plate-ny')}
+                position={[1.7, 4.72, -0.78]}
+              >
+                <Plate
+                  texture={textures.newYorkPlate}
+                  width={1.18}
+                  height={0.55}
+                  highlighted={canOutlineItem('plate-ny')}
+                />
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('plate-no') ? (
+              <InteractiveGroup
+                id="plate-no"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('plate-no')}
+                position={[4.35, 4.68, -0.78]}
+              >
+                <Plate
+                  texture={textures.norwayPlate}
+                  width={1.92}
+                  height={0.56}
+                  highlighted={canOutlineItem('plate-no')}
+                />
+              </InteractiveGroup>
+            ) : null}
+
+            {includeItem('plate-hk') ? (
+              <InteractiveGroup
+                id="plate-hk"
+                hoveredId={hoveredId}
+                onHoverChange={onHoverChange}
+                onSelect={onSelect}
+                hoverEnabled={canHoverItem('plate-hk')}
+                position={[6.7, 4.56, -0.78]}
+              >
+                <Plate
+                  texture={textures.hongKongPlate}
+                  width={1.28}
+                  height={0.54}
+                  highlighted={canOutlineItem('plate-hk')}
+                />
+              </InteractiveGroup>
+            ) : null}
+          </Suspense>
+        );
+
+        if (solo) {
+          return garageObjects;
+        }
+
+        return (
+          <>
+            <Selection>
+              {garageObjects}
+              <EffectComposer autoClear={false} multisampling={8}>
+                <Outline
+                  visibleEdgeColor={HOVER_OUTLINE_COLOR}
+                  hiddenEdgeColor={HOVER_OUTLINE_COLOR}
+                  edgeStrength={modelOutlineActive ? 34 : 0}
+                  pulseSpeed={0}
+                  height={1080}
+                  blur={false}
+                  xRay
+                />
+              </EffectComposer>
+            </Selection>
+            <ContactShadows
+              position={[2.8, 0.02, 1.0]}
+              opacity={0.56}
+              scale={20}
+              blur={1.9}
+              far={13}
+              resolution={768}
+              frames={1}
             />
-          </InteractiveGroup>
-
-          <InteractiveGroup
-          id="stlawrence"
-          hoveredId={hoveredId}
-          onHoverChange={onHoverChange}
-          onSelect={onSelect}
-          hoverEnabled={canHoverItem('stlawrence')}
-          position={[8.55, 2.62, 2.15]}
-          rotation={[0, -Math.PI / 2, 0]}
-        >
-          <Poster
-            texture={posterTextures.stLawrence}
-            width={1.62}
-            height={2.08}
-            highlighted={canOutlineItem('stlawrence')}
-            frameColor="#121315"
-            backgroundColor="#ffffff"
-            artWidth={1.34}
-            artHeight={1.34}
-            transparent
-          />
-        </InteractiveGroup>
-
-          <InteractiveGroup
-            id="coffee"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('coffee')}
-            position={[-4.28, 1.38, -6.02]}
-            rotation={[0, -Math.PI / 2, 0]}
-          >
-            <Select enabled={canOutlineItem('coffee')}>
-              <CoffeeMachine highlighted={canOutlineItem('coffee')} />
-            </Select>
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="crv"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('crv') && !carHoverSuppressed}
-            hitbox={{ size: [7.4, 3.2, 4.3], position: [0, 1.6, 0] }}
-            position={[1.35, 0, -0.15]}
-            rotation={[0, Math.PI + 0.18, 0]}
-          >
-            <Select enabled={canOutlineItem('crv')}>
-              <CRV highlighted={canOutlineItem('crv')} />
-            </Select>
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="laptop"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('laptop')}
-            position={[0.86, 1.06, 8.32]}
-            rotation={[0, 0.04, 0]}
-          >
-            <Select enabled={canOutlineItem('laptop')}>
-              <Laptop
-                active={activeId === 'laptop'}
-                finderVisible={activeId === 'laptop' && viewSettled}
-                highlighted={canOutlineItem('laptop')}
-              />
-            </Select>
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="projects"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('projects')}
-            position={[3.15, 1.06, 7.78]}
-            rotation={[0, -0.08, 0]}
-          >
-            <ProjectBox
-              textures={textures}
-              active={activeId === 'projects'}
-              highlighted={canOutlineItem('projects')}
-              projectsModelFocus={projectsModelFocus}
-              hintFlash={hintFlashActive && activeId === 'projects'}
-              onProjectsModelSelect={onProjectsModelSelect}
-              onProjectPieceHover={setProjectsPieceHover}
-            />
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="plate-ny"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('plate-ny')}
-            position={[1.7, 4.72, -0.78]}
-          >
-            <Plate
-              texture={textures.newYorkPlate}
-              width={1.18}
-              height={0.55}
-              highlighted={canOutlineItem('plate-ny')}
-            />
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="plate-no"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('plate-no')}
-            position={[4.35, 4.68, -0.78]}
-          >
-            <Plate
-              texture={textures.norwayPlate}
-              width={1.92}
-              height={0.56}
-              highlighted={canOutlineItem('plate-no')}
-            />
-          </InteractiveGroup>
-
-          <InteractiveGroup
-            id="plate-hk"
-            hoveredId={hoveredId}
-            onHoverChange={onHoverChange}
-            onSelect={onSelect}
-            hoverEnabled={canHoverItem('plate-hk')}
-            position={[6.7, 4.56, -0.78]}
-          >
-            <Plate
-              texture={textures.hongKongPlate}
-              width={1.28}
-              height={0.54}
-              highlighted={canOutlineItem('plate-hk')}
-            />
-          </InteractiveGroup>
-        </Suspense>
-
-        <EffectComposer autoClear={false} multisampling={8}>
-          <Outline
-            visibleEdgeColor={HOVER_OUTLINE_COLOR}
-            hiddenEdgeColor={HOVER_OUTLINE_COLOR}
-            edgeStrength={modelOutlineActive ? 34 : 0}
-            pulseSpeed={0}
-            height={1080}
-            blur={false}
-            xRay
-          />
-        </EffectComposer>
-      </Selection>
-
-      <ContactShadows
-        position={[2.8, 0.02, 1.0]}
-        opacity={0.56}
-        scale={20}
-        blur={1.9}
-        far={13}
-        resolution={768}
-        frames={1}
-      />
+          </>
+        );
+      })()}
     </>
   );
 }

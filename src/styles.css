@@ -2056,3 +2056,92 @@ body.hand-mode .hud-funway-btn.hand-pointer-hover {
   display: flex;
   justify-content: center;
 }
+
+.mobile-home {
+  min-height: 100svh;
+  overflow-y: auto;
+  padding:
+    max(1.35rem, env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-right))
+    max(1.6rem, env(safe-area-inset-bottom))
+    max(1.25rem, env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.14), transparent 28%),
+    var(--bg);
+}
+
+.mobile-home__header {
+  margin-bottom: 1.75rem;
+}
+
+.mobile-home__name {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 7vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.mobile-home__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.95rem;
+}
+
+.mobile-home__contact-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 1.02rem;
+  width: fit-content;
+  border-radius: 0.4rem;
+}
+
+.mobile-home__social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.mobile-home__projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.mobile-home__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.95rem 1.15rem;
+  border-radius: 0.85rem;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--panel-border-strong);
+  background: linear-gradient(180deg, rgba(22, 28, 42, 0.92), rgba(12, 14, 22, 0.96));
+  box-shadow: var(--shadow);
+}
+
+.mobile-home__btn--project {
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
+}
+
+.mobile-stage-fallback {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--bg);
+}

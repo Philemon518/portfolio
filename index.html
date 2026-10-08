@@ -2,36 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://storage.googleapis.com" crossorigin />
-    <link
-      rel="preload"
-      href="/models/arc_reactor.glb?v=real-20260501"
-      as="fetch"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/models/coffee_machine.glb?v=real-20260501"
-      as="fetch"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/models/macbook_air_m4.glb?v=real-20260501"
-      as="fetch"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="prefetch"
-      href="/models/honda_cr-v.glb?v=real-20260501"
-      as="fetch"
-      crossorigin="anonymous"
-    />
+    <script>
+      (function () {
+        var ua = navigator.userAgent;
+        var mobileUa = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        var coarse = window.matchMedia('(pointer: coarse)').matches;
+        var noHover = window.matchMedia('(hover: none)').matches;
+        if (mobileUa || (coarse && noHover)) {
+          return;
+        }
+        [
+          { href: '/models/arc_reactor.glb?v=real-20260501', rel: 'preload' },
+          { href: '/models/coffee_machine.glb?v=real-20260501', rel: 'preload' },
+          { href: '/models/macbook_air_m4.glb?v=real-20260501', rel: 'preload' },
+          { href: '/models/honda_cr-v.glb?v=real-20260501', rel: 'prefetch' },
+        ].forEach(function (model) {
+          var link = document.createElement('link');
+          link.rel = model.rel;
+          link.href = model.href;
+          link.as = 'fetch';
+          link.crossOrigin = 'anonymous';
+          document.head.appendChild(link);
+        });
+      })();
+    </script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Ubuntu:wght@400;500;600;700&display=swap"
       rel="stylesheet"
