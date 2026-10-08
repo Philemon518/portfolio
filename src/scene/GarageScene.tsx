@@ -991,12 +991,14 @@ function CameraRig({
   cameraDebugEnabled,
   onCameraPoseChange,
   onViewSettledChange,
+  zoomOut = 1,
 }: {
   activeId: ItemId | null;
   projectsModelFocus: 'arc' | 'fusion' | null;
   cameraDebugEnabled: boolean;
   onCameraPoseChange: (pose: CameraDebugPose) => void;
   onViewSettledChange: (settled: boolean) => void;
+  zoomOut?: number;
 }) {
   const { camera, invalidate } = useThree();
   const lookAt = useRef(new THREE.Vector3(...defaultCamera.target));
@@ -1199,6 +1201,9 @@ function CameraRig({
 
     tempPosition.set(...preset.position);
     tempTarget.set(...preset.target);
+    if (zoomOut !== 1) {
+      tempPosition.sub(tempTarget).multiplyScalar(zoomOut).add(tempTarget);
+    }
 
     const projectsPieceFocused = activeId === 'projects' && projectsModelFocus;
     const blend = 1 - Math.exp(-delta * (projectsPieceFocused ? 8.2 : 3.6));
@@ -2798,17 +2803,24 @@ export function GarageScene({
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={defaultCamera.position} fov={defaultCamera.fov} near={0.1} far={60} />
+      <PerspectiveCamera
+        makeDefault
+        position={defaultCamera.position}
+        fov={defaultCamera.fov}
+        near={0.1}
+        far={solo ? 80 : 60}
+      />
       <CameraRig
         activeId={activeId}
         projectsModelFocus={projectsModelFocus}
         cameraDebugEnabled={cameraDebugEnabled}
         onCameraPoseChange={onCameraPoseChange}
         onViewSettledChange={setViewSettled}
+        zoomOut={solo ? 2 : 1}
       />
 
       <color attach="background" args={['#120d0a']} />
-      <fog attach="fog" args={['#120d0a', 18, 33]} />
+      <fog attach="fog" args={solo ? ['#120d0a', 28, 52] : ['#120d0a', 18, 33]} />
 
       <ambientLight intensity={0.82} color="#f6e9d8" />
       <hemisphereLight intensity={0.68} color="#d6e4ff" groundColor="#31231c" />

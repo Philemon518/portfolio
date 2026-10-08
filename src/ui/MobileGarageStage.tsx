@@ -39,6 +39,11 @@ export default function MobileGarageStage({
   }, [activeId, projectsModelFocus]);
 
   useEffect(() => {
+    document.body.classList.add('mobile-garage');
+    return () => document.body.classList.remove('mobile-garage');
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !event.defaultPrevented) {
         handleHudBack();
@@ -49,7 +54,7 @@ export default function MobileGarageStage({
   }, [handleHudBack]);
 
   return (
-    <div className="app-shell">
+    <div className="app-shell app-shell--mobile">
       <CanvasErrorBoundary>
         <Canvas
           shadows
